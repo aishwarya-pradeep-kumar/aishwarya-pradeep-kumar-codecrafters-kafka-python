@@ -1,4 +1,4 @@
-import socket  # noqa: F401
+from broker import create_broker, send_response
 
 
 def main():
@@ -8,9 +8,11 @@ def main():
 
     # Uncomment this to pass the first stage
     #
-    server = socket.create_server(("localhost", 9092), reuse_port=True)
-    server.accept() # wait for client
-
+    kafka_broker = create_broker()
+    while True:
+        client, address = kafka_broker.accept()
+        send_response(client)
+    
 
 if __name__ == "__main__":
     main()
