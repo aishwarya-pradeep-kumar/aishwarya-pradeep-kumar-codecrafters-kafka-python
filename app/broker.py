@@ -8,7 +8,7 @@ def create_broker():
 
 def create_response(message_body):
     print(f'correlation_id:')
-    correlation_id = struct.unpack('>iilss',message_body)
+    correlation_id = struct.unpack('>hilss',message_body)
     header = struct.pack('>i',correlation_id)
     full_message = message_body + header
     client_message = struct.pack('>i', len(full_message)) + full_message
@@ -17,9 +17,7 @@ def create_response(message_body):
 
 def send_response(client):
     try:
-        print(f'reading message')
         client_message = client.recv(1024)
-        print("Received raw binary data:", client_message)
         response = create_response(client_message)
         client.send(response)
     except Exception as ex:
