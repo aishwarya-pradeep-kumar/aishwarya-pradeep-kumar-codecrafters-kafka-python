@@ -9,9 +9,9 @@ def create_broker():
 def create_response(message_body):
     request_api_key = struct.unpack(">h", message_body[:2])[0]
     print(f'header: {request_api_key}')
-    request_api_version = message_body[2:4]
+    request_api_version = message_body[3:5]
     print(f'request_api_version: {struct.unpack(">h",request_api_version)[0]}')
-    correlation_id = message_body[4:8]
+    correlation_id = message_body[6:10]
     print(f'correlation_id: {struct.unpack(">i",correlation_id)[0]}')
     correlation_id = struct.unpack(">i",correlation_id)[0]
     header = struct.pack('>i',correlation_id)
