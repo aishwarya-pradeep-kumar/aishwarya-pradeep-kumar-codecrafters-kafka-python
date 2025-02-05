@@ -7,7 +7,7 @@ def create_broker():
     return kafka_broker
 
 def create_response(message_body):
-    print(f'correlation_id:')
+    print(f'correlation_id: {message_body}')
     correlation_id = struct.unpack('>3i',message_body)
     header = struct.pack('>i',correlation_id)
     full_message = message_body + header
