@@ -7,10 +7,12 @@ def create_broker():
     return kafka_broker
 
 def create_response(message_body):
-    for message in struct.iter_unpack('>hhih',message_body):
-        print(f'message: {message}')
-        correlation_id = message
-    header = struct.pack('>i',correlation_id)
+    header_size = struct.calcsize("I")
+    header = struct.unpack("I", message_body[:header_size])[0]
+    print(f'header: {header}')
+    rest_body = message_body[header_size:]
+    print(f'rest_body: {rest_body}')
+    header = struct.pack('>i',7)
     full_message = message_body + header
     client_message = struct.pack('>i', len(full_message)) + full_message
     return client_message
