@@ -7,7 +7,7 @@ def create_broker():
     return kafka_broker
 
 def create_response(message_body):
-    request_api_key = struct.unpack("H", message_body[:2])[0]
+    request_api_key = struct.unpack("H", message_body[:2])
     print(f'header: {request_api_key}')
     request_api_version = message_body[2:4]
     print(f'request_api_version: {struct.unpack("H",request_api_version)}')
