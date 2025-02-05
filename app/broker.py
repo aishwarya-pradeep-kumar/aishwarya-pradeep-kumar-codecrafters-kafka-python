@@ -17,7 +17,7 @@ def create_response(message_body):
 
 def send_response(client):
     try:
-        client_message = client.recv(1024)
+        client_message = client.recv()
         response = create_response(client_message)
         client.send(response)
     except Exception as ex:
