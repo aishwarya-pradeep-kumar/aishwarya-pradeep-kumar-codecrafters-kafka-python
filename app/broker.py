@@ -7,12 +7,13 @@ def create_broker():
     return kafka_broker
 
 def create_response(message_body):
-    header_size = struct.calcsize("I")
-    header = struct.unpack("I", message_body[:header_size])[0]
-    print(f'header: {header}')
-    rest_body = message_body[header_size:]
-    print(f'rest_body: {rest_body}')
-    header = struct.pack('>i',7)
+    request_api_key = struct.unpack(">h", message_body[:2])[0]
+    print(f'header: {request_api_key}')
+    request_api_version = message_body[2:4]
+    print(f'request_api_version: {request_api_version}')
+    correlation_id = message_body[4:8]
+    print(f'correlation_id: {correlation_id}')
+    header = struct.pack('>i',correlation_id)
     full_message = message_body + header
     client_message = struct.pack('>i', len(full_message)) + full_message
     return client_message
