@@ -14,7 +14,8 @@ def create_response(message_body):
     # request_api_version = message_body[6:8]
     # print(f'request_api_version: {struct.unpack(">h",request_api_version)[0]}')
     correlation_id = message_body[8:12]
-    client_message = struct.pack('>i', len(0)) + correlation_id
+    # full_message = message_body + correlation_id
+    client_message = struct.pack('>i', len(correlation_id)) + correlation_id
     return client_message
 
 
