@@ -17,7 +17,7 @@ def create_response(message_body):
     correlation_id = message_body[8:12]
     error_code = api_versions.check_api_version(message_body)
     # full_message = message_body + correlation_id
-    client_message = struct.pack('>i', len(correlation_id)) + correlation_id + error_code
+    client_message = struct.pack('>i', len(correlation_id)) + correlation_id + struct.pack('>i', error_code)
     return client_message
 
 
