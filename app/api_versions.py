@@ -1,3 +1,8 @@
+import struct
 
-def check_api_version(message_body):
-    return 35
+def check_api_version(request_api_version):
+    request_api_key = struct.unpack(">h", request_api_version[6:8])[0]
+    if 0<= request_api_key <=4:
+        return True
+    else:
+        return False

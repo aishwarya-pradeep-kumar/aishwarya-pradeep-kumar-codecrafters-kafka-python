@@ -15,10 +15,10 @@ def create_response(message_body):
     # request_api_version = message_body[6:8]
     # print(f'request_api_version: {struct.unpack(">h",request_api_version)[0]}')
     correlation_id = message_body[8:12]
-    error_code = api_versions.check_api_version(message_body)
-    print(f'error_code: {struct.pack('>i', 0) + correlation_id + struct.pack('>i', error_code)}')
-    # full_message = message_body + correlation_id
-    client_message = struct.pack('>i', 0) + correlation_id + struct.pack('>i', error_code)
+    if api_versions.check_api_version(message_body):
+        client_message = struct.pack('>i', 0) + correlation_id + struct.pack('>h', 35)
+    else:
+        client_message = struct.pack('>i', 0) + correlation_id
     return client_message
 
 
