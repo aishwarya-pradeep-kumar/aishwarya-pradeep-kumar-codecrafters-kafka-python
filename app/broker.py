@@ -12,6 +12,7 @@ def create_api_versions_response_message(correlation_id, error_code, message_bod
     api_key = message_body[4:6]
     min_version, max_version = 0, 4
     throttle_time_ms = 0
+    print(f'api_key: {api_key}')
     response_body = struct.pack('>h', error_code) + struct.pack('>h',0) + api_key + struct.pack('>h', min_version) + struct.pack('>h', max_version) + struct.pack('>b', 0) + struct.pack('>h', throttle_time_ms) + struct.pack('>b', 0)
     return response_header, response_body
 
