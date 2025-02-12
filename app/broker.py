@@ -10,7 +10,7 @@ def create_broker():
 def create_api_versions_response_message(correlation_id, error_code, message_body):
     response_header = correlation_id 
     api_key = message_body[4:6]
-    min_version, max_version = 0, 4
+    min_version, max_version = 4, 4
     response_body = struct.pack('>h', error_code) + struct.pack('>b', 2) + api_key + struct.pack('>h', min_version) + struct.pack('>h', max_version) + struct.pack('>i', 0)
     return response_header, response_body
 
