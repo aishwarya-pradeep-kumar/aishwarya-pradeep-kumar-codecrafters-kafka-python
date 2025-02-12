@@ -12,8 +12,8 @@ def create_api_versions_response_message(correlation_id, error_code, message_bod
     api_key = message_body[4:6]
     min_version, max_version = 0, 4
     throttle_time_ms = 0
-    response_body = struct.pack('>h', error_code) + struct.pack('>h',0) + api_key + struct.pack('>h', min_version) + struct.pack('>h', max_version) +  struct.pack('>h', throttle_time_ms)
-    return response_header+response_body
+    response_body = struct.pack('>h', error_code) + struct.pack('>h',0) + api_key + struct.pack('>h', min_version) + struct.pack('>h', max_version) + struct.pack('>b', 0) + struct.pack('>h', throttle_time_ms) + struct.pack('>b', 0)
+    return response_header, response_body
 
 def create_api_versions_response(message_body):
     # message_size = struct.unpack(">i", message_body[:4])[0]
@@ -25,12 +25,12 @@ def create_api_versions_response(message_body):
     correlation_id = message_body[8:12]
     if api_versions.check_api_version(message_body):
         error_code = 0
-        client_message = create_api_versions_response_message(correlation_id, error_code, message_body)
+        response_header, response_body = create_api_versions_response_message(correlation_id, error_code, message_body)
     else:
         error_code = 35
-        client_message = create_api_versions_response_message(correlation_id, error_code, message_body)
-        
-    return struct.pack('>i', len(client_message))+client_message
+        response_header, response_body = create_api_versions_response_message(correlation_id, error_code, message_body)
+    message_length = len(response_header) + len(response_body)    
+    return struct.pack('>i', message_length)+response_header+response_body
 
 
 def send_response(client):
