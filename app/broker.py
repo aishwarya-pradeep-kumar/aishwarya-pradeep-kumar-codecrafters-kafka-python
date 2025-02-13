@@ -52,7 +52,5 @@ def send_response(client):
         client.sendall(response)
     except Exception as ex:
         print(f'Error occured: {ex}')
-    finally:
-        client.close()
 
     
