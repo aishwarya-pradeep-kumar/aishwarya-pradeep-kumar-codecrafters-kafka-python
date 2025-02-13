@@ -12,7 +12,6 @@ def create_api_versions_response_message(api_key, correlation_id, error_code):
     min_version, max_version = 0, 4
     throttle_time_ms = 0
     tag_buffer = b"\x00"
-    print(f'api_key: {struct.unpack(">h", api_key)}')
     response_body = (
         error_code.to_bytes(2) 
         + int(2).to_bytes(1)
@@ -34,6 +33,7 @@ def parse_client_request(request_body):
 
 def create_api_versions_response(request_body):
     api_key, api_versions, correlation_id, message_body = parse_client_request(request_body)
+    
     if api_version.check_api_version(struct.unpack(">h", api_versions)[0]):
         error_code = 0
         response_header, response_body = create_api_versions_response_message(api_key, correlation_id, error_code)
