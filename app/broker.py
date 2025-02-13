@@ -5,6 +5,7 @@ import app.api_versions as api_version
 
 def create_broker():
     kafka_broker = socket.create_server(address=("localhost", 9092), family=socket.AF_INET,reuse_port=True)
+    kafka_broker.listen(5)
     return kafka_broker
 
 def create_api_versions_response_message(api_key, correlation_id, error_code):
@@ -33,7 +34,7 @@ def parse_client_request(request_body):
 
 def create_api_versions_response(request_body):
     api_key, api_versions, correlation_id, message_body = parse_client_request(request_body)
-    
+
     if api_version.check_api_version(struct.unpack(">h", api_versions)[0]):
         error_code = 0
         response_header, response_body = create_api_versions_response_message(api_key, correlation_id, error_code)
@@ -48,7 +49,7 @@ def send_response(client):
     try:
         client_message = client.recv(1024)
         response = create_api_versions_response(client_message)
-        client.send(response)
+        client.sendall(response)
     except Exception as ex:
         print(f'Error occured: {ex}')
     finally:
