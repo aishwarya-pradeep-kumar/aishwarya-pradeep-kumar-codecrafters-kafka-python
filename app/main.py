@@ -10,11 +10,9 @@ def main():
     #
     while True:
         kafka_broker = create_broker()
-        client = None
+        client, address = kafka_broker.accept()
         while True:
-            client, address = kafka_broker.accept()
             send_response(client)
-        client.close()
 
     
 
