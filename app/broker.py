@@ -1,6 +1,6 @@
 import socket
 import struct
-import app.api_versions as api_versions
+import app.api_versions as api_version
 
 
 def create_broker():
@@ -34,7 +34,7 @@ def parse_client_request(request_body):
 
 def create_api_versions_response(request_body):
     api_key, api_versions, correlation_id, message_body = parse_client_request(request_body)
-    if api_versions.check_api_version(api_versions):
+    if api_version.check_api_version(api_versions):
         error_code = 0
         response_header, response_body = create_api_versions_response_message(api_key, correlation_id, error_code)
     else:
