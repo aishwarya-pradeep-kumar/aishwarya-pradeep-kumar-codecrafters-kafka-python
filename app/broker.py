@@ -46,11 +46,12 @@ def create_api_versions_response(request_body):
 
 
 def send_response(client):
-    try:
+    while True:
         client_message = client.recv(1024)
+        if not client_message:
+            break
         response = create_api_versions_response(client_message)
         client.sendall(response)
-    except Exception as ex:
-        print(f'Error occured: {ex}')
+    client.close()
 
     
