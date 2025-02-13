@@ -8,12 +8,13 @@ def main():
 
     # Uncomment this to pass the first stage
     #
-    kafka_broker = create_broker()
-    client = None
     while True:
-        client, address = kafka_broker.accept()
-        send_response(client)
-
+        kafka_broker = create_broker()
+        client = None
+        while True:
+            client, address = kafka_broker.accept()
+            send_response(client)
+        client.close()
 
     
 
