@@ -13,7 +13,7 @@ def main():
     while True:
         client, address = kafka_broker.accept()
         send_response(client)
-    client.close()
+
 
     
 
