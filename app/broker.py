@@ -1,7 +1,6 @@
 import socket
 import struct
 import app.api_versions as api_versions
-import msgpack
 
 
 def create_broker():
