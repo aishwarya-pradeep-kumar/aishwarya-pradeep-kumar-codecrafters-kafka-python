@@ -1,18 +1,19 @@
 import socket
 import struct
 import app.api_versions as api_versions
+import msgpack
 
 
 def create_broker():
     kafka_broker = socket.create_server(address=("localhost", 9092), family=socket.AF_INET,reuse_port=True)
     return kafka_broker
 
-def create_api_versions_response_message(correlation_id, error_code, message_body):
-    response_header = correlation_id 
-    api_key = message_body[4:6]
+def create_api_versions_response_message(api_key, correlation_id, error_code):
+    response_header = correlation_id
     min_version, max_version = 0, 4
     throttle_time_ms = 0
     tag_buffer = b"\x00"
+    print(f'api_key: {struct.unpack(">h", api_key)}')
     response_body = (
         error_code.value.to_bytes(2) 
         + int(2).to_bytes(1)
@@ -25,20 +26,21 @@ def create_api_versions_response_message(correlation_id, error_code, message_bod
     )
     return response_header, response_body
 
-def create_api_versions_response(message_body):
-    # message_size = struct.unpack(">i", message_body[:4])[0]
-    # print(f'message_size: {message_size}')
-    # request_api_key = struct.unpack(">h", message_body[4:6])[0]
-    # print(f'request_api_key: {request_api_key}')
-    # request_api_version = message_body[6:8]
-    # print(f'request_api_version: {struct.unpack(">h",request_api_version)[0]}')
-    correlation_id = message_body[8:12]
-    if api_versions.check_api_version(message_body):
+def parse_client_request(request_body):
+    api_key = request_body[4:6]
+    api_versions = request_body[6:8]
+    correlation_id = request_body[8:12]
+    message_body = request_body[12:]
+    return api_key, api_versions, correlation_id, message_body
+
+def create_api_versions_response(request_body):
+    api_key, api_versions, correlation_id, message_body = parse_client_request(request_body)
+    if api_versions.check_api_version(api_versions):
         error_code = 0
-        response_header, response_body = create_api_versions_response_message(correlation_id, error_code, message_body)
+        response_header, response_body = create_api_versions_response_message(api_key, correlation_id, error_code)
     else:
         error_code = 35
-        response_header, response_body = create_api_versions_response_message(correlation_id, error_code, message_body)
+        response_header, response_body = create_api_versions_response_message(api_key, correlation_id, error_code)
     message_length = len(response_header) + len(response_body)    
     return struct.pack('>i', message_length)+response_header+response_body
 
