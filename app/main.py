@@ -1,4 +1,5 @@
 from app.broker import create_broker, send_response
+import threading
 
 
 def main():
@@ -12,7 +13,8 @@ def main():
         kafka_broker = create_broker()
         client, address = kafka_broker.accept()
         while True:
-            send_response(client)
+            client_thread = threading.Thread(target=send_response, args=(client))
+            client_thread.start()
 
     
 
