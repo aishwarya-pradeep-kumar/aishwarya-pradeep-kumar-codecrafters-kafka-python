@@ -45,7 +45,7 @@ def create_api_versions_response(request_body):
     return struct.pack('>i', message_length)+response_header+response_body
 
 
-def send_response(client):
+def send_response(client, address):
     while True:
         client_message = client.recv(1024)
         if not client_message:

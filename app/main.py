@@ -11,8 +11,8 @@ def main():
     #
     kafka_broker = create_broker()
     while True:
-        client, address = kafka_broker.accept()
-        client_thread = threading.Thread(target=send_response, args=(client))
+        client_socket, address = kafka_broker.accept()
+        client_thread = threading.Thread(target=send_response, args=(client_socket, address))
         client_thread.start()
 
     
