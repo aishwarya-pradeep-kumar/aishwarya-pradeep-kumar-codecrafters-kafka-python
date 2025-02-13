@@ -34,7 +34,8 @@ def parse_client_request(request_body):
 
 def create_api_versions_response(request_body):
     api_key, api_versions, correlation_id, message_body = parse_client_request(request_body)
-    if api_version.check_api_version(api_versions):
+    print(f'api_key: {struct.unpack(">h", api_versions)}')
+    if api_version.check_api_version(struct.unpack(">h", api_versions)):
         error_code = 0
         response_header, response_body = create_api_versions_response_message(api_key, correlation_id, error_code)
     else:
